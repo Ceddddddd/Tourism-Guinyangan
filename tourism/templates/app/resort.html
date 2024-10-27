@@ -1,0 +1,32 @@
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'app/css/card.css' %}">
+<nav class="navbar">
+    <a href="{% url 'home' %}" class="navbar-brand">Go back</a>
+</nav>
+<section class="light">
+	<div class="container py-2 mt-5">
+		{% for resort in resorts %}
+		<article class="postcard light green">
+			<a class="postcard__img_link" href="#">
+				<img class="postcard__img" src="{{ resort.image_1.url }}" alt="Image Title" />
+			</a>
+			<div class="postcard__text t-dark">
+				<h1 class="postcard__title green"><a href="{% url 'resort_detail' resort.id %}">{{ resort.name }}</a></h1>
+				<div class="postcard__subtitle small">
+						<i class="fas fa-calendar-alt mr-2"></i>{{ resort.location }}
+				</div>
+				<div class="postcard__bar"></div>
+				<div class="postcard__preview-txt">{{ resort.description }}</div>
+				<ul class="postcard__tagbox">
+					<li class="tag__item" style="color: rgb(49, 47, 47);"><i class="fas fa-tag mr-2"></i>+{{ resort.phone }}</li>
+					<li class="tag__item" style="color: rgb(49, 47, 47);"><i class="fas fa-clock mr-2"></i>{{ resort.facebook }}</li>					
+					<li class="tag__item play green" >
+						<a style="color: rgb(49, 47, 47);" href="{% url 'resort_detail' resort.id %}"><i class="fas fa-play mr-2"></i>Read more</a>
+					</li>
+				</ul>
+			</div>
+		</article>
+		{% endfor %}
+	</div>
+</section>

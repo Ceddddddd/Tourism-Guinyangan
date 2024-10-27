@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Booking Form HTML Template</title>
+
+	<!-- Google font -->
+	<link href="https://fonts.googleapis.com/css?family=Lato:400,400i,700" rel="stylesheet">
+
+	<!-- Bootstrap -->
+	<link type="text/css" rel="stylesheet" href="{% static 'app/css/bootstrap.min.css' %}" />
+
+	<!-- Custom stylesheet -->
+	<link type="text/css" rel="stylesheet" href="{% static 'app/css/form.css' %}" />
+
+</head>
+
+<body>
+	<div id="booking" class="section">
+		<div class="section-center">
+			<div class="container">
+				<div class="row">
+					<div class="booking-form">
+						<form method="POST" action="{% url 'booking' %}">
+							{% csrf_token %}
+							
+							<!-- Resort Name -->
+							<div class="form-group">
+								<span class="form-label">Resort Name</span>
+								{{ form.resort_name }}
+							</div>
+
+							<div class="row no-margin">
+								<!-- Check In -->
+								<div class="col-sm-6">
+									<div class="form-group">
+										<span class="form-label">Check In</span>
+										{{ form.checkin_date }}
+									</div>
+								</div>
+
+								<!-- Check Out -->
+								<div class="col-sm-6">
+									<div class="form-group">
+										<span class="form-label">Check Out</span>
+										{{ form.checkout_date }}
+									</div>
+								</div>
+							</div>
+
+							<div class="row no-margin">
+								<!-- Number of Adults -->
+								<div class="col-sm-6">
+									<div class="form-group">
+										<span class="form-label">Adults</span>									
+										{{ form.number_of_adults }}
+									</div>
+								</div>
+
+								<!-- Number of Children -->
+								<div class="col-sm-6">
+									<div class="form-group">
+										<span class="form-label">Children (4ft below)</span>
+										{{ form.number_of_children }}
+									</div>
+								</div>
+							</div>
+
+							<!-- Room Type -->
+							<div class="form-group">
+								<span class="form-label">Room Type</span>
+								{{ form.room }}
+							</div>
+							
+							<!-- Name -->
+							<div class="form-group">
+								<span class="form-label">Name</span>
+								{{ form.name }}
+							</div>
+
+							<!-- Gmail -->
+							<div class="form-group">
+								<span class="form-label">Gmail</span>
+								{{ form.gmail }}
+							</div>
+
+							<!-- Phone -->
+							<div class="form-group">
+								<span class="form-label">Phone</span>
+								{{ form.phone }}
+							</div>
+
+							<!-- Submit Button -->
+							<div class="form-btn">
+								<button class="submit-btn" type="submit">Book Now</button>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
