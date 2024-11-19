@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Room</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="container mt-5">
+    <div class="card shadow-lg p-4">
+      <h2 class="text-center mb-4">Update Room</h2>
+      <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <div class="form-group mb-3">
+          <label for="room_name" class="form-label">Room Name</label>
+          {{ form.room_name }}
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="description" class="form-label">Description</label>
+          {{ form.description }}
+        </div>
+
+        <div class="form-row mb-3">
+          <div class="col">
+            <label for="capacity" class="form-label">Capacity</label>
+            {{ form.capacity }}
+          </div>
+          <div class="col">
+            <label for="price" class="form-label">Price (₱)</label>
+            {{ form.price }}
+          </div>
+        </div>
+
+        <div class="form-row mb-3">
+          <div class="col">
+            <label for="start" class="form-label">Start Time</label>
+            {{ form.start }}
+          </div>
+          <div class="col">
+            <label for="finish" class="form-label">Finish Time</label>
+            {{ form.finish }}
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="entrance" class="form-label">Entrance Fee (₱)</label>
+          {{ form.entrance }}
+        </div>
+
+        <div class="form-group mb-4">
+          <label for="picture" class="form-label">Room Image</label>
+          {{ form.picture }}
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button type="submit" class="btn btn-success">Save Changes</button>
+          <a href="{% url 'resort_settings' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

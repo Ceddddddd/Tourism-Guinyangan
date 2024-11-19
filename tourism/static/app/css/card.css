@@ -136,13 +136,14 @@ a, a:hover {
   width: 100px;
 }
 
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 768px) {
   .postcard {
     flex-wrap: inherit;
   }
 
   .postcard .postcard__title {
     font-size: 2rem;
+    transform: scale(1);
   }
 
   .postcard .postcard__tagbox {

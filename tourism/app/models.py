@@ -1,22 +1,33 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+class CustomUser(AbstractUser):
+    is_verified = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.username
 
 class Resort(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    entrance_fee_adult = models.DecimalField(max_digits=10, decimal_places=2,default=0)
-    entrance_fee_discounted = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    entrance_fee_adult = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    entrance_fee_discounted = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     phone = models.CharField(max_length=15)
     gmail = models.CharField(max_length=30)
     facebook = models.CharField(max_length=30)
-    location = models.CharField(max_length=50)
+    location = models.CharField(max_length=100)
     image_1 = models.ImageField(upload_to='app/images/', blank=True, null=True)
     image_2 = models.ImageField(upload_to='app/images/', blank=True, null=True)
     image_3 = models.ImageField(upload_to='app/images/', blank=True, null=True)
     image_4 = models.ImageField(upload_to='app/images/', blank=True, null=True)
     image_5 = models.ImageField(upload_to='app/images/', blank=True, null=True)
+    
+    # Add a ForeignKey to CustomUser for the owner relationship
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='resorts')
 
     def __str__(self):
         return self.name
+
 
 
 class Room(models.Model):

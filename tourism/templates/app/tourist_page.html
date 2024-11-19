@@ -24,216 +24,218 @@
 </head>
 
 <body id="top">
-  <nav class="navbar">
-    <a href="{% url 'resort' %}" class="navbar-brand">Go back</a>
+ {% block content %}
+ <nav class="navbar">
+  <a href="{% url 'resort' %}" class="navbar-brand m-1 text-light" >Go back</a>
 </nav>
-  <main>
-    <article>
+<main>
+  <article>
 
-      <!-- Package Section -->
-      <section class="package" id="package">
-        <div class="container">
-          <p class="section-subtitle">Welcome to {{ resort.name }}</p>
-
-          <h2 class="h2 section-title">Checkout Our Commodities</h2>
-
-          <p class="section-text">
-            {{ resort.description }}
-          </p>
-
-          <ul class="package-list">
-           {% for room in rooms %}
-           <li>
-            <div class="package-card">
-              <figure class="card-banner">
-                <img src="{% if room.picture %}{{ room.picture.url }}{% else %}{% static 'app/images/image_1.jpg' %}{% endif %}" 
-                     alt="Experience {{ resort.name }}" loading="lazy">
-              </figure>
-
-              <div class="card-content">
-                <h3 class="h3 card-title">{{ room.room_name }}</h3>
-                <p class="card-text">{{ room.description }}</p>
-
-                <ul class="card-meta-list">
-                  <li class="card-meta-item">
-                    <div class="meta-box">
-                      <ion-icon name="time"></ion-icon>
-                      <p class="text">{{ room.start }} to {{ room.finish }}</p>
-                    </div>
-                  </li>
-                  <li class="card-meta-item">
-                    <div class="meta-box">
-                      <ion-icon name="people"></ion-icon>
-                      <p class="text">Pax: {{ room.capacity }}</p>
-                    </div>
-                  </li>
-                  <li class="card-meta-item">
-                    <div class="meta-box">
-                      <ion-icon name="location"></ion-icon>
-                      <p class="text">₱{{ room.entrance }} each</p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="card-price">
-                <div class="wrapper">
-                  <p class="reviews">(PWD and Senior discounts apply)</p>
-                </div>
-                <p class="price">₱{{ room.price|default:"N/A"|floatformat:0 }}</p>
-                <a href="{% url 'form' resort.name room.id %}" class="btn btn-secondary">Book Now</a>
-              </div>
-            </div>
-          </li>
-           {% endfor %}
-          </ul>
-        </div>
-      </section>
-
-      <!-- Gallery Section -->
-      <section class="gallery" id="gallery">
-        <div class="container">
-          <p class="section-subtitle">Photo Gallery</p>
-          <h2 class="h2 section-title">Promotion</h2>
-          <p class="section-text">
-            Here are some images taken from {{ resort.name }}. We hope you like them.
-          </p>
-
-          <ul class="gallery-list">
-            <li class="gallery-item">
-              <figure class="gallery-image">
-                <img src="{% if resort.image_1 %}{{ resort.image_1.url }}{% else %}{% static 'app/images/image_1.jpg' %}{% endif %}" 
-                     alt="Gallery image">
-              </figure>
-            </li>
-            <li class="gallery-item">
-              <figure class="gallery-image">
-                <img src="{% if resort.image_2 %}{{ resort.image_2.url }}{% else %}{% static 'app/images/image_1.jpg' %}{% endif %}" 
-                     alt="Gallery image">
-              </figure>
-            </li>
-            <li class="gallery-item">
-              <figure class="gallery-image">
-                <img src="{% if resort.image_3 %}{{ resort.image_3.url }}{% else %}{% static 'app/images/image_1.jpg' %}{% endif %}" 
-                     alt="Gallery image">
-              </figure>
-            </li>
-            <li class="gallery-item">
-              <figure class="gallery-image">
-                <img src="{% if resort.image_4 %}{{ resort.image_4.url }}{% else %}{% static 'app/images/default_image.jpg' %}{% endif %}" 
-                     alt="Gallery image">
-              </figure>
-            </li>
-            <li class="gallery-item">
-              <figure class="gallery-image">
-                <img src="{% if resort.image_5 %}{{ resort.image_5.url }}{% else %}{% static 'app/images/default_image.jpg' %}{% endif %}" 
-                     alt="Gallery image">
-              </figure>
-            </li>
-
-          </ul>
-        </div>
-      </section>
-
-      <!-- Call to Action Section -->
-      <section class="cta" id="contact">
-        <div class="container">
-          <div class="cta-content">
-            <p class="section-subtitle">Call To Action</p>
-            <h2 class="h2 section-title">Ready For Unforgettable Memories?</h2>
-            <p class="section-text">
-              Contact us for more information or to make a booking.
-            </p>
-          </div>
-          <button class="btn btn-secondary" onclick="toggleContactDetails()">Contact Us!</button>
-        </div>
-        <div id="contactDetails" class="semi-modal">
-          <div class="semi-modal-content">
-              <h5>Contact Us</h5>
-              <p><strong>Email:</strong> {{ resort.gmail }}</p>
-              <p><strong>Phone:</strong> {{ resort.phone }}</p>
-              <p><strong>Address:</strong> {{ resort.location }}</p>
-              <button class="btn" style="color: black; border:1px solid black;" onclick="toggleContactDetails()">Close</button>
-          </div>
-      </div>
-      </section>
-    </article>
-  </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-bottom">
+    <!-- Package Section -->
+    <section class="package" id="package">
       <div class="container">
-        <p class="copyright">&copy; 2024 <a href="#">Guinyangan</a>. All pictures and informations used are publicly available datas</p>
-        <ul class="footer-bottom-list">
-          <li>
-            <a href="https://mail.google.com/mail/u/0/?fs=1&to={{ resort.gmail }}&su=Subject&body=Write+a+letter&tf=cm" class="footer-bottom-link">
-                {{ resort.gmail }}
-            </a>
-        </li>        
-        <li>
-            <a href="#" class="footer-bottom-link">+{{ resort.phone }}</a>
+        <p class="section-subtitle">Welcome to {{ resort.name }}</p>
+
+        <h2 class="h2 section-title">Checkout Our Commodities</h2>
+
+        <p class="section-text">
+          {{ resort.description }}
+        </p>
+
+        <ul class="package-list">
+         {% for room in rooms %}
+         <li>
+          <div class="package-card">
+            <figure class="card-banner">
+              <img src="{% if room.picture %}{{ room.picture.url }}{% else %}{% static 'app/images/image_1.jpg' %}{% endif %}" 
+                   alt="Experience {{ resort.name }}" loading="lazy">
+            </figure>
+
+            <div class="card-content">
+              <h3 class="h3 card-title">{{ room.room_name }}</h3>
+              <p class="card-text">{{ room.description }}</p>
+
+              <ul class="card-meta-list">
+                <li class="card-meta-item">
+                  <div class="meta-box">
+                    <ion-icon name="time"></ion-icon>
+                    <p class="text">{{ room.start }} to {{ room.finish }}</p>
+                  </div>
+                </li>
+                <li class="card-meta-item">
+                  <div class="meta-box">
+                    <ion-icon name="people"></ion-icon>
+                    <p class="text">Pax: {{ room.capacity }}</p>
+                  </div>
+                </li>
+                <li class="card-meta-item">
+                  <div class="meta-box">
+                    <ion-icon name="location"></ion-icon>
+                    <p class="text">₱{{ room.entrance }} each</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card-price">
+              <div class="wrapper">
+                <p class="reviews">(PWD and Senior discounts apply)</p>
+              </div>
+              <p class="price">₱{{ room.price|default:"N/A"|floatformat:0 }}</p>
+              <a href="{% url 'form' resort.name room.id %}" class="btn btn-secondary">Book Now</a>
+            </div>
+          </div>
         </li>
-        <li>
-            <a href="{{ resort.facebook }}" class="footer-bottom-link" target="_blank">{{ resort.facebook }}</a>
-        </li>        
+         {% endfor %}
         </ul>
-        <!-- Close Button -->
       </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+      <div class="container">
+        <p class="section-subtitle">Photo Gallery</p>
+        <h2 class="h2 section-title">Promotion</h2>
+        <p class="section-text">
+          Here are some images taken from {{ resort.name }}. We hope you like them.
+        </p>
+
+        <ul class="gallery-list">
+          <li class="gallery-item">
+            <figure class="gallery-image">
+              <img src="{% if resort.image_1 %}{{ resort.image_1.url }}{% else %}{% static 'app/images/image_1.jpg' %}{% endif %}" 
+                   alt="Gallery image">
+            </figure>
+          </li>
+          <li class="gallery-item">
+            <figure class="gallery-image">
+              <img src="{% if resort.image_2 %}{{ resort.image_2.url }}{% else %}{% static 'app/images/image_1.jpg' %}{% endif %}" 
+                   alt="Gallery image">
+            </figure>
+          </li>
+          <li class="gallery-item">
+            <figure class="gallery-image">
+              <img src="{% if resort.image_3 %}{{ resort.image_3.url }}{% else %}{% static 'app/images/image_1.jpg' %}{% endif %}" 
+                   alt="Gallery image">
+            </figure>
+          </li>
+          <li class="gallery-item">
+            <figure class="gallery-image">
+              <img src="{% if resort.image_4 %}{{ resort.image_4.url }}{% else %}{% static 'app/images/default_image.jpg' %}{% endif %}" 
+                   alt="Gallery image">
+            </figure>
+          </li>
+          <li class="gallery-item">
+            <figure class="gallery-image">
+              <img src="{% if resort.image_5 %}{{ resort.image_5.url }}{% else %}{% static 'app/images/default_image.jpg' %}{% endif %}" 
+                   alt="Gallery image">
+            </figure>
+          </li>
+
+        </ul>
+      </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta" id="contact">
+      <div class="container">
+        <div class="cta-content">
+          <p class="section-subtitle">Call To Action</p>
+          <h2 class="h2 section-title">Ready For Unforgettable Memories?</h2>
+          <p class="section-text">
+            Contact us for more information or to make a booking.
+          </p>
+        </div>
+        <button class="btn btn-secondary" onclick="toggleContactDetails()">Contact Us!</button>
+      </div>
+      <div id="contactDetails" class="semi-modal">
+        <div class="semi-modal-content">
+            <h5>Contact Us</h5>
+            <p><strong>Email:</strong> {{ resort.gmail }}</p>
+            <p><strong>Phone:</strong> {{ resort.phone }}</p>
+            <p><strong>Address:</strong> {{ resort.location }}</p>
+            <button class="btn" style="color: black; border:1px solid black;" onclick="toggleContactDetails()">Close</button>
+        </div>
     </div>
-  </footer>
+    </section>
+  </article>
+</main>
 
-  <!-- Go to Top Button -->
-  <a href="#top" class="go-top" data-go-top>
-    <ion-icon name="chevron-up-outline"></ion-icon>
-  </a>
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-bottom">
+    <div class="container">
+      <p class="copyright">&copy; 2024 <a href="#">Guinyangan</a>. All pictures and informations used are publicly available datas</p>
+      <ul class="footer-bottom-list">
+        <li>
+          <a href="https://mail.google.com/mail/u/0/?fs=1&to={{ resort.gmail }}&su=Subject&body=Write+a+letter&tf=cm" class="footer-bottom-link">
+              {{ resort.gmail }}
+          </a>
+      </li>        
+      <li>
+          <a href="#" class="footer-bottom-link">+{{ resort.phone }}</a>
+      </li>
+      <li>
+          <a href="{{ resort.facebook }}" class="footer-bottom-link" target="_blank">{{ resort.facebook }}</a>
+      </li>        
+      </ul>
+      <!-- Close Button -->
+    </div>
+  </div>
+</footer>
 
-  <!-- Custom JS -->
-  <script src="{% static 'app/js/tourist_page.js' %}"></script>
+<!-- Go to Top Button -->
+<a href="#top" class="go-top" data-go-top>
+  <ion-icon name="chevron-up-outline"></ion-icon>
+</a>
 
-  <!-- Ionicons -->
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <style>
-    /* Semi-Modal Background */
-    .semi-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
-    /* Modal Content */
-    .semi-modal-content {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        width: 80%;
-        max-width: 400px;
-        text-align: center;
-        
-    }
-    /* Close Button */
-    .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 20px;
-        cursor: pointer;
-    }
+<!-- Custom JS -->
+<script src="{% static 'app/js/tourist_page.js' %}"></script>
+
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<style>
+  /* Semi-Modal Background */
+  .semi-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+  }
+  /* Modal Content */
+  .semi-modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+      
+  }
+  /* Close Button */
+  .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+  }
 </style>
 
 <!-- JavaScript to Toggle the Semi-Modal -->
 <script>
-    function toggleContactDetails() {
-        var modal = document.getElementById("contactDetails");
-        modal.style.display = modal.style.display === "flex" ? "none" : "flex";
-    }
+  function toggleContactDetails() {
+      var modal = document.getElementById("contactDetails");
+      modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+  }
 </script>
+ {% endblock %}
 </body>
 </html>
