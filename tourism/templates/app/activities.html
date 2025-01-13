@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities - Guinyangan Tourism</title>
+    <link rel="stylesheet" href="{% static 'app/css/card.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/tourist_page.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="navbar-brand m-1 text-light">Go back</a>
+    </nav>
+
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Activities in Guinyangan</h1>
+        
+        <div class="activities-container">
+            {% for activity in activities %}
+            <article class="postcard light blue">
+                <a class="postcard__img_link" href="#">
+                    {% if activity.image_url %}
+                    <img class="postcard__img" src="{{ activity.image_url }}" alt="{{ activity.name }}" />
+                    {% else %}
+                    <img class="postcard__img" src="{% static 'app/images/placeholder.png' %}" alt="No image available" />
+                    {% endif %}
+                </a>
+                <div class="postcard__text t-dark">
+                    <h2 class="postcard__title blue">{{ activity.name }}</h2>
+                    <div class="postcard__subtitle small">
+                        <div class="mb-2">
+                            <i class="fas fa-map-marker-alt mr-2"></i>{{ activity.location }}
+                        </div>
+                        {% if activity.duration %}
+                        <div class="mb-2">
+                            <i class="fas fa-clock mr-2"></i>Duration: {{ activity.duration }}
+                        </div>
+                        {% endif %}
+                        {% if activity.difficulty_level %}
+                        <div class="mb-2">
+                            <i class="fas fa-signal mr-2"></i>Difficulty: {{ activity.difficulty_level }}
+                        </div>
+                        {% endif %}
+                        {% if activity.price %}
+                        <div class="mb-2">
+                            <i class="fas fa-tag mr-2"></i>Price: ₱{{ activity.price }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="postcard__bar"></div>
+                    <div class="postcard__preview-txt">
+                        {{ activity.description }}
+                        {% if activity.requirements %}
+                        <div class="mt-3">
+                            <strong>Requirements:</strong><br>
+                            {{ activity.requirements }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <div class="text-center">
+                <p>No activities are currently available.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <style>
+        .activities-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .postcard.blue:hover .postcard__bar {
+            background-color: #2196F3;
+        }
+
+        .postcard__title.blue {
+            color: #2196F3;
+        }
+
+        .postcard.light.blue {
+            border-color: #2196F3;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .navbar {
+            background-color: #2196F3;
+            padding: 1rem;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+    </style>
+</body>
+
+</html>

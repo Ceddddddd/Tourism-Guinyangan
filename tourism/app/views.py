@@ -7,44 +7,53 @@ from email.mime.text import MIMEText
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,logout,authenticate
-# Set up your email parameters
-smtp_server = 'smtp.gmail.com'  # or your SMTP server
-port = 587  # For TLS
-sender_email = 'ced08062003@gmail.com'  # Replace with your email
-password = 'zwqh vkea xisn trsk'  # Replace with your email password
 
-recipient_email = 'antoniojhancedric@gmail.com'  # Replace with recipient's email
+# Set up your email parameters
+smtp_server = 'smtp.gmail.com'  
+port = 587  
+sender_email = 'ced08062003@gmail.com'  
+password = 'zwqh vkea xisn trsk'  
+
+recipient_email = 'antoniojhancedric@gmail.com'  
 subject = 'Hello'
 body = 'This is a test email from Python!'
 
-# Create the email message
 msg = MIMEText(body)
 msg['Subject'] = subject
 msg['From'] = sender_email
 msg['To'] = recipient_email
 
 
+# BOOKING SYSTEM
+
 def home(request):
 
     return render(request, 'app/index.html')
 
-# Details of selected Resort
 def resort_detail(request, id):
     resort = get_object_or_404(Resort, id=id)
-    rooms = resort.rooms.all()  # Fetch only rooms associated with the specified resort
+    rooms = resort.rooms.all()  
     context = {
         'resort': resort,
         'rooms': rooms
     }
     return render(request, 'app/tourist_page.html', context)
 
-# Redirect to List of resorts 
+
 def resort(request):
     resorts = Resort.objects.all()  
-    context = {'resorts': resorts}  
+    falls = Falls.objects.all()
+    restaurants = Restaurant.objects.all()
+    cultural_attractions = CulturalAttraction.objects.all()
+    context = {
+        'resorts': resorts,
+        'falls': falls,
+        'restaurants': restaurants,
+        'cultural_attractions': cultural_attractions
+    }
     return render(request, 'app/resort.html', context)
 
-# Handles form submission
+
 def booking(request):
     if request.method == 'POST':
         form = BookingForm(request.POST)
@@ -61,8 +70,7 @@ def booking(request):
             checkout = form.cleaned_data['checkout_date'] 
             resort_instance = Resort.objects.get(id=selected_resort.id) 
 
-            # Sends an email
-            recipient_email = f'{resort_instance.gmail}'  # Replace with recipient's email
+            recipient_email = f'{resort_instance.gmail}'  
             subject = 'Booking Confirmation'
             body = f"""
                 Name: {name}
@@ -75,7 +83,6 @@ def booking(request):
                 Check-Out Date: {checkout}
             """
 
-            # Create the email message
             msg = MIMEText(body)
             msg['Subject'] = subject
             msg['From'] = sender_email
@@ -98,7 +105,6 @@ def booking(request):
 
     return redirect('resort')
 
-# Goes to the Form page 
 def form(request, resort_name, room_id):
 
     resort = get_object_or_404(Resort, name=resort_name)
@@ -111,15 +117,20 @@ def form(request, resort_name, room_id):
 
     return render(request, 'app/form.html', {'form': form, 'resort': resort})
 
+# BOOKING SYSTEM END
 
 
+
+# AUTHENTICATIONS
 def loginForm(request):
+    if request.user.is_authenticated:
+        return redirect('auth_home')
     return render(request, 'app/auth/loginForm.html')
 
 def login_view(request):
     print('form activated')
     if request.user.is_authenticated:
-        return redirect("resort_settings")  # Redirect logged-in users
+        return redirect("auth_home")  
     
     if request.method == "POST":
         username = request.POST.get("username")
@@ -128,7 +139,7 @@ def login_view(request):
         
         if user is not None:
             login(request, user)
-            return redirect("resort_settings")
+            return redirect("auth_home")
         else:
             messages.error(request, "Invalid username or password.")
     return redirect('loginForm')
@@ -138,17 +149,20 @@ def logout_view(request):
     return redirect("loginForm")
 
 def registerForm(request):
+    if request.user.is_authenticated:
+        return redirect('auth_home')
     form = CustomUserCreationForm()
     return render(request, 'app/auth/registerForm.html', {'form':form})
 
-
 def create_user_view(request):
+    if request.user.is_authenticated:
+        return redirect('auth_home')
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, "User created successfully!")
-            return redirect('loginForm')  # Redirect to the login page or another relevant page
+            return redirect('loginForm') 
         else:
             messages.error(request, "Username or email already exists")
     else:
@@ -156,29 +170,65 @@ def create_user_view(request):
     
     return redirect('registerForm')
 
+# AUTHENTICATION END
+
+# OWNER PAGE
+
+"""
+NAVIGATIONS
+- Functions that renders pages
+"""
 @login_required
-def resort_settings(request):
-    # Fetch the first resort or create a new one if it doesn't exist
+def auth_home(request):
+    resort = Resort.objects.get(owner=request.user)
+    bookings = Booking.objects.filter(resort_name=resort.id)
+    return render(request, 'app/auth/booking.html', {'bookings': bookings})
+
+@login_required
+def room_page(request):
     resort, created = Resort.objects.get_or_create(owner=request.user)
-    
-    # Fetch all room instances related to this resort for display
     rooms = Room.objects.filter(resort=resort)
     
     if request.method == 'POST':
-        # Resort form handling
         form = ResortSettingsForm(request.POST, request.FILES, instance=resort)
         room_form = RoomForm(request.POST, request.FILES)
         print(form.errors)
         if form.is_valid():
             resort_instance = form.save(commit=False)
-            resort_instance.owner = request.user  # Ensure the owner is set
+            resort_instance.owner = request.user  
             resort_instance.save()
             messages.success(request, "Resort settings updated successfully.")
         else:
             messages.error(request, "There was an error updating the resort settings.")
     else:
         form = ResortSettingsForm(instance=resort)
-        room_form = RoomForm()  # Blank form for adding new rooms
+        room_form = RoomForm()  
+
+    context = {
+        'form': room_form,
+        'rooms': rooms,
+    }
+    return render(request, 'app/auth/room.html', context)
+
+@login_required
+def resort_settings(request):
+    resort, created = Resort.objects.get_or_create(owner=request.user)
+    rooms = Room.objects.filter(resort=resort)
+    
+    if request.method == 'POST':
+        form = ResortSettingsForm(request.POST, request.FILES, instance=resort)
+        room_form = RoomForm(request.POST, request.FILES)
+        print(form.errors)
+        if form.is_valid():
+            resort_instance = form.save(commit=False)
+            resort_instance.owner = request.user  
+            resort_instance.save()
+            messages.success(request, "Resort settings updated successfully.")
+        else:
+            messages.error(request, "There was an error updating the resort settings.")
+    else:
+        form = ResortSettingsForm(instance=resort)
+        room_form = RoomForm()  
 
     context = {
         'form': form,
@@ -188,42 +238,88 @@ def resort_settings(request):
     return render(request, 'app/auth/base.html', context)
 
 @login_required
-def add_room_view(request):
-    # Get or create a resort instance for the current user
-    resort = Resort.objects.get_or_create(owner=request.user)[0]  # This assumes the Resort model has a ForeignKey to User as 'owner'
-
-    if request.method == 'POST':
-        form = RoomForm(request.POST, request.FILES)
-        if form.is_valid():
-            # Save the room and associate it with the resort
-            room = form.save(commit=False)
-            room.resort = resort  # Automatically associate the room with the resort
-            room.save()  # Save the room instance
-            messages.success(request, "Room added successfully!")
-            return redirect('resort_settings')  # Adjust this to wherever you want to redirect after adding a room
-        else:
-            print("Form errors:", form.errors)
-    else:
-        form = RoomForm()
-
-    return redirect('resort_settings')
-
-@login_required
 def update_room(request, id):
     room = get_object_or_404(Room, id=id)
     if request.method == 'POST':
         form = RoomForm(request.POST, request.FILES, instance=room)
         if form.is_valid():
             form.save()
-            return redirect('resort_settings')  # Redirect to a room list or detail view after updating
+            return redirect('resort_settings')  
     else:
         form = RoomForm(instance=room)
     
     return render(request, 'app/auth/roomForm.html', {'form': form})
+
+"""
+ END OF NAVIGATIONS
+"""
+
+"""
+ AUTH PAGES FUNCTIONS
+"""
+@login_required
+def add_room_view(request):
+    resort = Resort.objects.get_or_create(owner=request.user)[0] 
+
+    if request.method == 'POST':
+        form = RoomForm(request.POST, request.FILES)
+        if form.is_valid():
+            room = form.save(commit=False)
+            room.resort = resort 
+            room.save() 
+            messages.success(request, "Room added successfully!")
+        else:
+            print("Form errors:", form.errors)
+    else:
+        form = RoomForm()
+
+    return redirect('room_page')
 
 @login_required
 def delete_room(request, id):
     room = get_object_or_404(Room, id=id)
     room.delete()
     messages.success(request, "Room successfully deleted.")
-    return redirect('resort_settings')
+    return redirect('room_page')
+"""
+ END OF AUTH PAGES FUNCTIONS
+"""
+# OWNER PAGE END
+
+def festivals(request):
+    festivals = Festival.objects.all().order_by('date')
+    context = {
+        'festivals': festivals
+    }
+    return render(request, 'app/festivals.html', context)
+
+def events(request):
+    events = Event.objects.all().order_by('schedule')
+    context = {
+        'events': events
+    }
+    return render(request, 'app/events.html', context)
+
+def activities(request):
+    activities = Activity.objects.all().order_by('name')
+    context = {
+        'activities': activities
+    }
+    return render(request, 'app/activities.html', context)
+
+def fiestas(request):
+    # Order by the day and month of the date field
+    fiestas = Fiesta.objects.all().extra(
+        select={'month_day': "strftime('%%m-%%d', date)"}
+    ).order_by('month_day')
+    context = {
+        'fiestas': fiestas
+    }
+    return render(request, 'app/fiestas.html', context)
+
+def cultural_attractions(request):
+    attractions = CulturalAttraction.objects.all().order_by('name')
+    context = {
+        'cultural_attractions': attractions
+    }
+    return render(request, 'app/cultural_attractions.html', context)

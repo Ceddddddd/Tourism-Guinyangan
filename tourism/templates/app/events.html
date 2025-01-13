@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - Guinyangan Tourism</title>
+    <link rel="stylesheet" href="{% static 'app/css/card.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/tourist_page.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="navbar-brand m-1 text-light">Go back</a>
+    </nav>
+
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Upcoming Events in Guinyangan</h1>
+        
+        <div class="events-container">
+            {% for event in events %}
+            <article class="postcard light green">
+                <a class="postcard__img_link" href="#">
+                    {% if event.image_url %}
+                    <img class="postcard__img" src="{{ event.image_url }}" alt="{{ event.name }}" />
+                    {% else %}
+                    <img class="postcard__img" src="{% static 'app/images/placeholder.png' %}" alt="No image available" />
+                    {% endif %}
+                </a>
+                <div class="postcard__text t-dark">
+                    <h2 class="postcard__title green">{{ event.name }}</h2>
+                    <div class="postcard__subtitle small">
+                        <div class="mb-2">
+                            <i class="fas fa-calendar-alt mr-2"></i>{{ event.schedule|date:"F j, Y g:i A" }}
+                        </div>
+                        <div class="mb-2">
+                            <i class="fas fa-map-marker-alt mr-2"></i>{{ event.location }}
+                        </div>
+                        {% if event.organizer %}
+                        <div class="mb-2">
+                            <i class="fas fa-user mr-2"></i>{{ event.organizer }}
+                        </div>
+                        {% endif %}
+                        {% if event.contact %}
+                        <div>
+                            <i class="fas fa-phone mr-2"></i>{{ event.contact }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="postcard__bar"></div>
+                    <div class="postcard__preview-txt">{{ event.description }}</div>
+                </div>
+            </article>
+            {% empty %}
+            <div class="text-center">
+                <p>No events are currently scheduled.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <style>
+        .events-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .postcard.green:hover .postcard__bar {
+            background-color: #4CAF50;
+        }
+
+        .postcard__title.green {
+            color: #4CAF50;
+        }
+
+        .postcard.light.green {
+            border-color: #4CAF50;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .navbar {
+            background-color: #4CAF50;
+            padding: 1rem;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+    </style>
+</body>
+
+</html>

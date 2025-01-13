@@ -8,6 +8,7 @@
   <title>Explore Destinations - Travel Agency</title>
   <link rel="stylesheet" href="{% static 'app/css/card.css' %}">
   <link rel="stylesheet" href="{% static 'app/css/tourist_page.css' %}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -59,17 +60,116 @@
 
     <!-- Falls Tab Content -->
     <div id="falls" class="tab-content">
-      <!-- Falls content similar to resorts; replace 'resorts' with 'falls' data loop -->
+      {% for fall in falls %}
+        <article class="postcard light blue">
+          <a class="postcard__img_link" href="#">
+            {% if fall.image %}
+              <img class="postcard__img" src="{{ fall.image.url }}" alt="Image of {{ fall.name }}" />
+            {% else %}
+              <img class="postcard__img" src="{% static 'app/images/placeholder.png' %}" alt="No image available" />
+            {% endif %}
+          </a>
+          <div class="postcard__text t-dark">
+            <h1 class="postcard__title blue"><a href="#">{{ fall.name }}</a></h1>
+            <div class="postcard__subtitle small">
+              <i class="fas fa-map-marker-alt mr-2"></i>{{ fall.location }}
+            </div>
+            <div class="postcard__bar"></div>
+            <div class="postcard__preview-txt">{{ fall.description }}</div>
+          </div>
+        </article>
+      {% endfor %}
     </div>
 
     <!-- Restaurants Tab Content -->
     <div id="restaurants" class="tab-content">
-      <!-- Restaurants content similar to resorts; replace 'resorts' with 'restaurants' data loop -->
+      {% for restaurant in restaurants %}
+        {% if restaurant.owner.is_verified %}
+        <article class="postcard light red">
+          <a class="postcard__img_link" href="#">
+            {% if restaurant.image_1 %}
+              <img class="postcard__img" src="{{ restaurant.image_1.url }}" alt="Image of {{ restaurant.name }}" />
+            {% else %}
+              <img class="postcard__img" src="{% static 'app/images/placeholder.png' %}" alt="No image available" />
+            {% endif %}
+          </a>
+          <div class="postcard__text t-dark">
+            <h1 class="postcard__title red"><a href="#">{{ restaurant.name }}</a></h1>
+            <div class="postcard__subtitle small">
+              <i class="fas fa-map-marker-alt mr-2"></i>{{ restaurant.location }}
+            </div>
+            <div class="postcard__bar"></div>
+            <div class="postcard__preview-txt">{{ restaurant.description }}</div>
+            <ul class="postcard__tagbox">
+              <li class="tag__item"><i class="fas fa-utensils mr-2"></i>{{ restaurant.cuisine_type }}</li>
+              <li class="tag__item"><i class="fas fa-tag mr-2"></i>{{ restaurant.price_range }}</li>
+              <li class="tag__item"><i class="fas fa-phone mr-2"></i>{{ restaurant.phone }}</li>
+              <li class="tag__item"><i class="fab fa-facebook mr-2"></i>{{ restaurant.facebook }}</li>
+            </ul>
+          </div>
+        </article>
+        {% endif %}
+      {% endfor %}
     </div>
 
     <!-- Cultural Attractions Tab Content -->
     <div id="cultural" class="tab-content">
-      <!-- Cultural attractions content similar to resorts; replace 'resorts' with 'cultural' data loop -->
+      {% for attraction in cultural_attractions %}
+        <article class="postcard light yellow">
+          <a class="postcard__img_link" href="#">
+            {% if attraction.image %}
+              <img class="postcard__img" src="{{ attraction.image.url }}" alt="Image of {{ attraction.name }}" />
+            {% else %}
+              <img class="postcard__img" src="{% static 'app/images/placeholder.png' %}" alt="No image available" />
+            {% endif %}
+          </a>
+          <div class="postcard__text t-dark">
+            <h1 class="postcard__title yellow"><a href="#">{{ attraction.name }}</a></h1>
+            <div class="postcard__subtitle small">
+              <i class="fas fa-map-marker-alt mr-2"></i>{{ attraction.location }}
+            </div>
+            <div class="postcard__bar"></div>
+            <div class="postcard__preview-txt">
+              {{ attraction.description }}
+              {% if attraction.historical_significance %}
+              <br><br>
+              <strong><i class="fas fa-history mr-2"></i>Historical Significance:</strong><br>
+              {{ attraction.historical_significance }}
+              {% endif %}
+
+              {% if attraction.visiting_hours %}
+              <br><br>
+              <strong><i class="fas fa-clock mr-2"></i>Visiting Hours:</strong><br>
+              {{ attraction.visiting_hours }}
+              {% endif %}
+
+              {% if attraction.entrance_fee %}
+              <br><br>
+              <strong><i class="fas fa-ticket-alt mr-2"></i>Entrance Fee:</strong><br>
+              {{ attraction.entrance_fee }}
+              {% endif %}
+
+              {% if attraction.contact_info %}
+              <br><br>
+              <strong><i class="fas fa-phone mr-2"></i>Contact Information:</strong><br>
+              {{ attraction.contact_info }}
+              {% endif %}
+
+              {% if attraction.best_time_to_visit %}
+              <br><br>
+              <strong><i class="fas fa-sun mr-2"></i>Best Time to Visit:</strong><br>
+              {{ attraction.best_time_to_visit }}
+              {% endif %}
+
+              {% if attraction.cultural_practices %}
+              <br><br>
+              <strong><i class="fas fa-hands mr-2"></i>Cultural Practices:</strong><br>
+              {{ attraction.cultural_practices }}
+              {% endif %}
+            </div>
+          </div>
+        </article>
+      {% endfor %}
     </div>
   </div>
 
@@ -94,10 +194,64 @@
   <style>
     .tabs {
       display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
       justify-content: center;
+      margin-bottom: 20px;
     }
+
+    .postcard__subtitle {
+      margin: 10px 0;
+      color: #555;
+    }
+
+    .postcard__subtitle .fas {
+      color: #ffc107;
+      margin-right: 8px;
+    }
+
+    .postcard__preview-txt .fas {
+      color: #ffc107;
+      width: 20px;
+      margin-right: 5px;
+    }
+
+    .postcard__tagbox {
+      display: flex;
+      flex-flow: row wrap;
+      font-size: 14px;
+      margin: 20px 0 0 0;
+      padding: 0;
+      justify-content: flex-end;
+    }
+
+    .tag__item {
+      display: inline-block;
+      background: rgba(83, 83, 83, 0.4);
+      border-radius: 3px;
+      padding: 2.5px 10px;
+      margin: 0 5px 5px 0;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s;
+      list-style: none;
+    }
+
+    .tag__item.play.yellow {
+      background: #ffc107;
+    }
+
+    .tag__item.play.yellow:hover {
+      background: #e0a800;
+    }
+
+    .tag__item a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .tag__item i {
+      margin-right: 5px;
+    }
+
     .tab-btn {
       padding: 10px 20px;
       background: #4CAF50;
